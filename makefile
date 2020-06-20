@@ -1,7 +1,8 @@
+CLASS_FOLDER = socialDistanceShopSampleSolution/
 OUTDIR = bin/
+
 JFLAGS = -g
 JC = javac
-CLASS_FOLDER = socialDistanceShopSampleSolution/
 .SUFFIXES: .java .class
 .java.class:
 	$(JC) $(JFLAGS) $*.java

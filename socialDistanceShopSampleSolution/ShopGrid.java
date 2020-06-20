@@ -4,6 +4,8 @@
  
 package socialDistanceShopSampleSolution;
 
+import java.util.concurrent.Semaphore;
+
 public class ShopGrid {
 	private GridBlock [][] Blocks;
 	private final int x;
@@ -12,6 +14,7 @@ public class ShopGrid {
 	private final static int minX =5;//minimum x dimension
 	private final static int minY =5;//minimum y dimension
 	
+	Semaphore inEntrance;
 	
 	ShopGrid() throws InterruptedException {
 		this.x=20;
@@ -20,6 +23,8 @@ public class ShopGrid {
 		Blocks = new GridBlock[x][y];
 		int [] [] dfltExit= {{10,10}};
 		this.initGrid(dfltExit);
+
+		inEntrance = new Semaphore(1);
 	}
 	
 	ShopGrid(int x, int y, int [][] exitBlocks,int maxPeople) throws InterruptedException {
@@ -30,6 +35,8 @@ public class ShopGrid {
 		this.checkout_y=y-3;
 		Blocks = new GridBlock[x][y];
 		this.initGrid(exitBlocks);
+		
+		inEntrance = new Semaphore(1);
 	}
 	
 	private  void initGrid(int [][] exitBlocks) throws InterruptedException {
@@ -70,10 +77,12 @@ public class ShopGrid {
 	}
 	
 	//called by customer when entering shop
-	public synchronized GridBlock enterShop() throws InterruptedException  {
+	public GridBlock enterShop() throws InterruptedException  {
 		GridBlock entrance = whereEntrance();
 
+		inEntrance.acquire();
 		entrance.get();
+
 		return entrance;
 
 	}
@@ -102,6 +111,9 @@ public class ShopGrid {
 		
 			if (newBlock.get())  {  //get successful because block not occupied 
 					currentBlock.release(); //must release current block
+					if((currentBlock.getX() == whereEntrance().getX()) && (currentBlock.getY() == whereEntrance().getY()) ){
+						inEntrance.release();
+					}
 				}
 			else {
 				newBlock=currentBlock;

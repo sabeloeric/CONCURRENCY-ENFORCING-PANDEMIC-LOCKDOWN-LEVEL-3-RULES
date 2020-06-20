@@ -1,5 +1,5 @@
 package socialDistanceShopSampleSolution;
-
+import java.util.concurrent.Semaphore;
 // GridBlock class to represent a block in the shop.
 
 public class GridBlock {
@@ -10,6 +10,9 @@ public class GridBlock {
 	private int ID;
 	
 	public static int classCounter=0;
+
+	//
+	Semaphore available; 
 	
 	GridBlock(boolean exitBlock, boolean checkoutBlock) throws InterruptedException {
 		isExit=exitBlock;
@@ -17,6 +20,8 @@ public class GridBlock {
 		isOccupied= false;
 		ID=classCounter;
 		classCounter++;
+
+		available = new Semaphore(1);
 	}
 	
 	GridBlock(int x, int y, boolean exitBlock, boolean refreshBlock) throws InterruptedException {
@@ -32,13 +37,19 @@ public class GridBlock {
 	
 	//for customer to move to a block
 	public boolean get() throws InterruptedException {
+		if(isOccupied){
+			return false;
+		}
+		available.acquire();
 		isOccupied=true;
 		return true;
 	}
 		
 	//for customer to leave a block
 	public  void release() {
+		//available.acquire();
 		isOccupied =false;
+		available.release();
 	}
 	
 	//getter

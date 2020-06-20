@@ -25,7 +25,7 @@ public class PeopleCounter {
 	}
 	
 	//getter
-	public int getTotal() {
+	synchronized public int getTotal() {
 		return (peopleOutSide+peopleInside+peopleLeft);
 	}
 
@@ -40,18 +40,18 @@ public class PeopleCounter {
 	}
 	
 	//getter
-	public void personArrived() {
+	synchronized public void personArrived() {
 		peopleOutSide++;
 	}
 	
 	//update counters for a person entering the shop
-	public void personEntered() {
+	synchronized public void personEntered() {
 		peopleOutSide--;
 		peopleInside++;
 	}
 
 	//update counters for a person exiting the shop
-	public void personLeft() {
+	synchronized public void personLeft() {
 		peopleInside--;
 		peopleLeft++;
 		
