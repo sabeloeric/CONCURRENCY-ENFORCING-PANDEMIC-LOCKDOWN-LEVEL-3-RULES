@@ -1,5 +1,8 @@
 package socialDistanceShopSampleSolution;
 
+import java.util.concurrent.Semaphore;
+
+
 //class to keep track of people inside and outside and left shop
 public class PeopleCounter {
 	private int peopleOutSide; //counter for people arrived but not yet in the building
@@ -7,11 +10,15 @@ public class PeopleCounter {
 	private int peopleLeft; //people left the shop
 	private int maxPeople; //maximum for lockdown rules
 	
+	Semaphore maxAllowed;
+
 	PeopleCounter(int max) {
 		peopleOutSide = 0;
 		peopleInside = 0;
 		peopleLeft = 0;
-		maxPeople = 0;
+		maxPeople = max;
+
+		maxAllowed = new Semaphore(max);
 	}
 		
 	//getter
@@ -40,25 +47,27 @@ public class PeopleCounter {
 	}
 	
 	//getter
-	synchronized public void personArrived() {
+	public void personArrived() {
 		peopleOutSide++;
 	}
 	
 	//update counters for a person entering the shop
-	synchronized public void personEntered() {
+	public void personEntered() throws InterruptedException{
+		maxAllowed.acquire();
 		peopleOutSide--;
 		peopleInside++;
 	}
 
 	//update counters for a person exiting the shop
-	synchronized public void personLeft() {
+	public void personLeft() {
+		maxAllowed.release();
 		peopleInside--;
 		peopleLeft++;
 		
 	}
 
 	//reset - not really used
-	synchronized public void resetScore() {
+	public void resetScore() {
 		peopleInside = 0;
 		peopleOutSide = 0;
 		peopleLeft = 0;
