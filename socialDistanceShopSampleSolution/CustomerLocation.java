@@ -44,9 +44,9 @@ public class CustomerLocation  { // this is a separate class so don't have to ac
 		public  int getID() {	return ID;	}
 
 	//getter
-		public  boolean inRoom() {
-			return inRoom.get();
-		}
+	public  boolean inRoom() {
+		return inRoom.get();
+	}
 	//getter
 	public synchronized  Color getColor() { return myColor; }
 		
