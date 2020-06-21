@@ -11,7 +11,7 @@ public class GridBlock {
 	
 	public static int classCounter=0;
 
-	//
+	// allow one customer to accupy block
 	Semaphore available; 
 	
 	GridBlock(boolean exitBlock, boolean checkoutBlock) throws InterruptedException {
@@ -40,6 +40,7 @@ public class GridBlock {
 		if(isOccupied){
 			return false;
 		}
+		// lock if accupied
 		available.acquire();
 		isOccupied=true;
 		return true;
@@ -47,7 +48,7 @@ public class GridBlock {
 		
 	//for customer to leave a block
 	public  void release() {
-		//available.acquire();
+		// release once not accupied
 		isOccupied =false;
 		available.release();
 	}

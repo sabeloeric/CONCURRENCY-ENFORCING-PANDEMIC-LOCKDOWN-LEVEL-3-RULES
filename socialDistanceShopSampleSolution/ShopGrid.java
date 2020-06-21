@@ -14,6 +14,7 @@ public class ShopGrid {
 	private final static int minX =5;//minimum x dimension
 	private final static int minY =5;//minimum y dimension
 	
+	// allow one customer in entrance door
 	Semaphore inEntrance;
 	
 	ShopGrid() throws InterruptedException {
@@ -80,8 +81,9 @@ public class ShopGrid {
 	public GridBlock enterShop() throws InterruptedException  {
 		GridBlock entrance = whereEntrance();
 
+		// lock if in entrance
 		inEntrance.acquire();
-		entrance.get();
+		entrance.get(); // accupied 
 
 		return entrance;
 
@@ -112,6 +114,7 @@ public class ShopGrid {
 			if (newBlock.get())  {  //get successful because block not occupied 
 					currentBlock.release(); //must release current block
 					if((currentBlock.getX() == whereEntrance().getX()) && (currentBlock.getY() == whereEntrance().getY()) ){
+						// release if leaves entrance block
 						inEntrance.release();
 					}
 				}

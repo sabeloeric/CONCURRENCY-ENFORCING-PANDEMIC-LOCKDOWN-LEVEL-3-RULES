@@ -11,6 +11,7 @@ public class PeopleCounter {
 	private AtomicInteger peopleLeft; //people left the shop
 	private AtomicInteger maxPeople; //maximum for lockdown rules
 	
+	// allow a certain number customers in store
 	Semaphore maxAllowed;
 
 	PeopleCounter(int max) {
@@ -19,7 +20,7 @@ public class PeopleCounter {
 		peopleLeft = new AtomicInteger(0);
 		maxPeople = new AtomicInteger(max);
 
-		maxAllowed = new Semaphore(max);
+		maxAllowed = new Semaphore(max); 
 	}
 		
 	//getter
